@@ -7,19 +7,18 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.navigationdemo.ui.theme.NavigationDemoTheme
-
 import androidx.navigation3.runtime.NavKey
-import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.ui.NavDisplay
 import com.example.navigationdemo.screens.*
-
+import com.example.navigationdemo.ui.theme.NavigationDemoTheme
+import com.example.navigationdemo.screens.Home
+import com.example.navigationdemo.screens.Welcome
+import com.example.navigationdemo.screens.Profile
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,9 +44,13 @@ fun MainScreen(modifier: Modifier = Modifier) {
             backStack.removeLastOrNull()
         }
     }
+    val onNavigation: (NavKey) -> Unit = {
+        backStack.add(it)
+    }
     NavDisplay(
         backStack = backStack,
-        onBack = { backStack.removeLastOrNull() },
+       // onBack = { backStack.removeLastOrNull() },
+        onBack = { while (backStack.size > 1) { backStack.removeLastOrNull() } },
         entryProvider = entryProvider {
             entry<HomeScreen> {
                 Home(onNavigation)
@@ -62,9 +65,7 @@ fun MainScreen(modifier: Modifier = Modifier) {
             }
         }
     )
-    val onNavigation: (NavKey) -> Unit = {
-        backStack.add(it)
-    }
+
 }
 
 @Preview(showBackground = true)
